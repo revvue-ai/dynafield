@@ -50,12 +50,15 @@ async def mutate_records(info: Info, record_schema_id: UUID, records: JSON) -> R
     schema = db_record_schema[record_schema_id]
     model = schema.get_pydantic_model()
     values = []
+    serialized_values = []
     for record in records:
-        values.append(model(**record))
+        model_instance = model(**record)
+        values.append(model_instance)
+        serialized_values.append(model_instance.model_dump(mode="json", exclude_none=True))
 
-    db_records[record_schema_id].append(values)
+    db_records[record_schema_id].append(serialized_values)
 
-    return Records(records=values, count=len(values))
+    return Records(records=serialized_values, count=len(serialized_values))
 
 
 @strawberry.type

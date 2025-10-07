@@ -1,6 +1,14 @@
 from datetime import datetime
 
+import httpx
+import pytest
+import pytest_asyncio
+from fastapi import FastAPI
+from httpx import ASGITransport
+from strawberry.fastapi import GraphQLRouter
+
 from dynafield import RecordSchemaDefinition
+from dynafield.base_model import CustomJSONResponse
 from dynafield.fields.base_field import build_dynamic_model
 from dynafield.fields.date_field import DateTimeField
 from dynafield.fields.email_field import EmailField
@@ -9,21 +17,19 @@ from dynafield.fields.int_field import IntField
 from dynafield.fields.list_field import ListField
 from dynafield.fields.str_field import StrField
 from dynafield.utils import uuid_7
+from example import gql
 from example._client import Client
+from example.gql import Schema
 
-client = Client(url="http://localhost:1000/graphql")
-schemaId = uuid_7()
 
 customer_fields = [
-    # Fixed literals
     StrField(
         label="tag",
         default_str="booking",
         description="Constant literal indicating this is a booking super tag.",
     ),
-    # Booking payload
-    IntField(label="numberOfGuests"),  # optional → no default
-    DateTimeField(label="date"),  # optional
+    IntField(label="numberOfGuests"),
+    DateTimeField(label="date"),
     StrField(label="firstName"),
     StrField(label="lastName"),
     EmailField(label="email"),
@@ -45,32 +51,116 @@ customer_fields = [
     ListField(
         label="evidence",
         description="Items explaining why each field was set; text must be a 1:1 copy from the analyzed content.",
+        default_list=[],
     ),
 ]
 
 
-def test_mutate_schema_record():
-    data = RecordSchemaDefinition(id=schemaId, name="customerField", field_definitions=customer_fields)
-    client.mutate_record_schema(schema_to_add=data.dump(keep_data_types=False, exclude_none=True))
+def _schema_payload(schema_definition: RecordSchemaDefinition) -> dict:
+    payload = schema_definition.dump(keep_data_types=False, exclude_none=True)
+    field_definitions = payload.get("field_definitions", [])
+    if field_definitions:
+        for field_payload, field in zip(field_definitions, schema_definition.field_definitions, strict=True):
+            field_payload["__typename"] = getattr(field.typename__, "value", field.typename__)
+    return payload
 
 
-def test_mutate_record():
-    customerInfo = build_dynamic_model("customerInfo", customer_fields)
-    data = customerInfo(
-        requestType="NEW_BOOKING",
-        numberOfGuests=4,
-        date=datetime.now(),
-        firstName="Ada",
-        lastName="Lovelace",
+@pytest.fixture(autouse=True)
+def reset_in_memory_db():
+    gql.db_record_schema.clear()
+    gql.db_records.clear()
+    yield
+    gql.db_record_schema.clear()
+    gql.db_records.clear()
+
+
+@pytest_asyncio.fixture()
+async def graphql_client() -> Client:
+    fastapi_app = FastAPI(default_response_class=CustomJSONResponse)
+    fastapi_app.include_router(
+        GraphQLRouter(Schema, default_response_class=CustomJSONResponse),
+        prefix="/graphql",
+    )
+    transport = ASGITransport(app=fastapi_app)
+    async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as async_client:
+        yield Client(url="http://testserver/graphql", http_client=async_client)
+
+
+@pytest.mark.asyncio
+async def test_mutate_schema_and_fetch_schema(graphql_client: Client):
+    schema_id = uuid_7()
+    schema_definition = RecordSchemaDefinition(
+        id=schema_id,
+        name="customerField",
+        field_definitions=customer_fields,
+    )
+
+    mutation_result = await graphql_client.mutate_record_schema(
+        schema_to_add=_schema_payload(schema_definition)
+    )
+
+    assert mutation_result.record_schema.count == 1
+    created_schema = mutation_result.record_schema.schemas[0]
+    assert str(created_schema.id) == str(schema_id)
+    assert created_schema.name == "customerField"
+    assert created_schema.field_definitions is not None
+    created_labels = [field.label for field in created_schema.field_definitions]
+    expected_labels = [field.label for field in customer_fields]
+    assert created_labels == expected_labels
+
+    query_result = await graphql_client.query_record_schema(record_schema_id=schema_id)
+
+    assert query_result.record_schema.count == 1
+    fetched_schema = query_result.record_schema.schemas[0]
+    assert str(fetched_schema.id) == str(schema_id)
+    fetched_labels = [field.label for field in fetched_schema.field_definitions]
+    assert fetched_labels == expected_labels
+
+
+@pytest.mark.asyncio
+async def test_mutate_records_and_fetch_records(graphql_client: Client):
+    schema_id = uuid_7()
+    schema_definition = RecordSchemaDefinition(
+        id=schema_id,
+        name="customerField",
+        field_definitions=customer_fields,
+    )
+    await graphql_client.mutate_record_schema(
+        schema_to_add=_schema_payload(schema_definition)
+    )
+
+    customer_model = build_dynamic_model("customerInfo", customer_fields)
+    record = customer_model(
+        requesttype="NEW_BOOKING",
+        numberofguests=4,
+        date=datetime(2024, 4, 1, 19, 0, 0),
+        firstname="Ada",
+        lastname="Lovelace",
         email="ada@example.com",
+        phone="555-0100",
+        specialrequest="Window seat",
+        bookingid="BK-42",
         evidence=[{"field": "date", "text": "Tomorrow 19:00"}],
     )
-    client.mutate_records(record_schema_id=schemaId, records=[data.dump(keep_data_types=False, exclude_none=True)])
 
+    mutate_result = await graphql_client.mutate_records(
+        record_schema_id=schema_id,
+        records=[record.model_dump(mode="json", exclude_none=True)],
+    )
 
-def test_query_records():
-    client.query_records(record_schema_id=schemaId)
+    assert mutate_result.records.count == 1
+    stored_records = mutate_result.records.records
+    assert isinstance(stored_records, list)
+    assert stored_records[0]["firstname"] == "Ada"
+    assert stored_records[0]["requesttype"] == "NEW_BOOKING"
 
+    query_result = await graphql_client.query_records(record_schema_id=schema_id)
 
-def test_query_schema():
-    client.query_record_schema(record_schema_id=schemaId)
+    assert query_result.records.count == 1
+    fetched_batches = query_result.records.records
+    assert isinstance(fetched_batches, list)
+    assert len(fetched_batches) == 1
+    fetched_records = fetched_batches[0]
+    assert isinstance(fetched_records, list)
+    assert fetched_records[0]["bookingid"] == "BK-42"
+    assert fetched_records[0]["numberofguests"] == 4
