@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
-from typing import Annotated, Iterable, MutableMapping, Union
+from typing import Annotated, Any, Iterable, MutableMapping, Union
 from uuid import UUID
 
+import strawberry
 from pydantic import Field
 
 from dynafield.base_model import BaseModel
@@ -62,15 +63,32 @@ TypeFieldsUnion = Annotated[
 
 class RecordSchemaDefinition(BaseModel):
     id: UUID = Field(default_factory=lambda: uuid_7())
-    name: str
+    name: str = "record name"
     description: str | None = None
-    field_definitions: list[TypeFieldsUnion]
+    field_definitions: list[TypeFieldsUnion] | None = None
 
     def build_record_model(self) -> type[BaseModel]:
         return build_dynamic_model(self.name, self.field_definitions)
 
-    def to_pydantic(self) -> type[BaseModel]:  # pragma: no cover - legacy name
+    def get_pydantic_model(self) -> type[BaseModel]:  # pragma: no cover - legacy name
         return self.build_record_model()
+
+    def to_gql_type(self, extra: dict[str, Any] | None = None) -> "RecordSchemaDefinitionGql":
+        obj = RecordSchemaDefinitionGql(
+            id=self.id,
+            name=self.name,
+            description=self.description,
+            field_definitions=[v.to_gql_type() for v in self.field_definitions] if self.field_definitions else None,
+        )
+        return obj
+
+
+@strawberry.type
+class RecordSchemaDefinitionGql:
+    id: UUID
+    name: str
+    description: str | None
+    field_definitions: list[TypeFieldsUnionGql] | None
 
 
 class RecordSchemaRegistry:
@@ -89,9 +107,7 @@ class RecordSchemaRegistry:
     def build_model(self, schema_id: UUID) -> type[BaseModel]:
         return self.get(schema_id).build_record_model()
 
-    def build_records(
-        self, schema_id: UUID, stored_records: Iterable[dict]
-    ) -> list[BaseModel]:
+    def build_records(self, schema_id: UUID, stored_records: Iterable[dict]) -> list[BaseModel]:
         model_cls = self.build_model(schema_id)
         return [model_cls(**record) for record in stored_records]
 

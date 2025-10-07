@@ -17,7 +17,7 @@ EvidenceItemField = ObjectField(
     ],
 )
 
-booking_fields = [
+customer_fields = [
     # Fixed literals
     StrField(
         label="tag",
@@ -52,11 +52,11 @@ booking_fields = [
 ]
 
 if __name__ == "__main__":
-    BookingSuperTagModel = build_dynamic_model("BookingSuperTagModel", booking_fields)
-    m = BookingSuperTagModel(
+    customerInfo = build_dynamic_model("customerInfo", customer_fields)
+    m = customerInfo(
         requestType="NEW_BOOKING",
         numberOfGuests=4,
-        date=datetime.utcnow(),
+        date=datetime.now(),
         firstName="Ada",
         lastName="Lovelace",
         email="ada@example.com",

@@ -1,9 +1,9 @@
 import uvicorn
 from fastapi import FastAPI
+from gql import Schema
 from strawberry.fastapi import GraphQLRouter
 
 from dynafield.base_model import CustomJSONResponse
-from example.gql import Schema
 
 app = FastAPI(default_response_class=CustomJSONResponse)
 app.include_router(GraphQLRouter(Schema), prefix="/graphql")

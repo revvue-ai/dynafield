@@ -142,9 +142,14 @@ fragment ObjectFieldDefinition on ObjectFieldGql {
 #}
 #
 
-query RecordFields {
-    typedFields {
-        fields {
+query queryRecordSchema($recordSchemaId: UUID!){
+    recordSchema(recordSchemaId: $recordSchemaId) {
+        count
+        schemas {
+            id
+            name
+            description
+            fieldDefinitions {
             ...BoolFieldDefinition
             ...DateFieldDefinition
             ...DateTimeFieldDefinition
@@ -157,6 +162,48 @@ query RecordFields {
             ...StrFieldDefinition
             ...UuidFieldDefinition
             ...ObjectFieldDefinition
+
+            }
         }
+    }
+}
+
+query queryRecords($recordSchemaId: UUID!){
+    records(recordSchemaId: $recordSchemaId){
+        count
+        records
+    }
+}
+
+mutation mutateRecordSchema($schemaToAdd: JSON!){
+    recordSchema(schemaToAdd: $schemaToAdd) {
+        count
+        schemas {
+            id
+            name
+            description
+            fieldDefinitions {
+            ...BoolFieldDefinition
+            ...DateFieldDefinition
+            ...DateTimeFieldDefinition
+            ...EmailFieldDefinition
+            ...EnumFieldDefinition
+            ...FloatFieldDefinition
+            ...IntFieldDefinition
+            ...JsonFieldDefinition
+            ...ListFieldDefinition
+            ...StrFieldDefinition
+            ...UuidFieldDefinition
+            ...ObjectFieldDefinition
+
+            }
+        }
+    }
+}
+
+mutation mutateRecords($recordSchemaId: UUID!, $records: JSON!){
+    records(recordSchemaId: $recordSchemaId, records: $records){
+        count
+        records
     }
 }

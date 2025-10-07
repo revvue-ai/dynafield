@@ -4,7 +4,10 @@
 from typing import Any, Dict
 
 from .async_base_client import AsyncBaseClient
-from .record_fields import RecordFields
+from .mutate_record_schema import MutateRecordSchema
+from .mutate_records import MutateRecords
+from .query_record_schema import QueryRecordSchema
+from .query_records import QueryRecords
 
 
 def gql(q: str) -> str:
@@ -12,25 +15,31 @@ def gql(q: str) -> str:
 
 
 class Client(AsyncBaseClient):
-    async def record_fields(self, **kwargs: Any) -> RecordFields:
+    async def query_record_schema(self, record_schema_id: Any, **kwargs: Any) -> QueryRecordSchema:
         query = gql(
             """
-            query RecordFields {
-              typedFields {
-                fields {
-                  __typename
-                  ...BoolFieldDefinition
-                  ...DateFieldDefinition
-                  ...DateTimeFieldDefinition
-                  ...EmailFieldDefinition
-                  ...EnumFieldDefinition
-                  ...FloatFieldDefinition
-                  ...IntFieldDefinition
-                  ...JsonFieldDefinition
-                  ...ListFieldDefinition
-                  ...StrFieldDefinition
-                  ...UuidFieldDefinition
-                  ...ObjectFieldDefinition
+            query queryRecordSchema($recordSchemaId: UUID!) {
+              recordSchema(recordSchemaId: $recordSchemaId) {
+                count
+                schemas {
+                  id
+                  name
+                  description
+                  fieldDefinitions {
+                    __typename
+                    ...BoolFieldDefinition
+                    ...DateFieldDefinition
+                    ...DateTimeFieldDefinition
+                    ...EmailFieldDefinition
+                    ...EnumFieldDefinition
+                    ...FloatFieldDefinition
+                    ...IntFieldDefinition
+                    ...JsonFieldDefinition
+                    ...ListFieldDefinition
+                    ...StrFieldDefinition
+                    ...UuidFieldDefinition
+                    ...ObjectFieldDefinition
+                  }
                 }
               }
             }
@@ -126,9 +135,167 @@ class Client(AsyncBaseClient):
             }
             """
         )
-        variables: Dict[str, object] = {}
-        response = await self.execute(
-            query=query, operation_name="RecordFields", variables=variables, **kwargs
-        )
+        variables: Dict[str, object] = {"recordSchemaId": record_schema_id}
+        response = await self.execute(query=query, operation_name="queryRecordSchema", variables=variables, **kwargs)
         data = self.get_data(response)
-        return RecordFields.model_validate(data)
+        return QueryRecordSchema.model_validate(data)
+
+    async def query_records(self, record_schema_id: Any, **kwargs: Any) -> QueryRecords:
+        query = gql(
+            """
+            query queryRecords($recordSchemaId: UUID!) {
+              records(recordSchemaId: $recordSchemaId) {
+                count
+                records
+              }
+            }
+            """
+        )
+        variables: Dict[str, object] = {"recordSchemaId": record_schema_id}
+        response = await self.execute(query=query, operation_name="queryRecords", variables=variables, **kwargs)
+        data = self.get_data(response)
+        return QueryRecords.model_validate(data)
+
+    async def mutate_record_schema(self, schema_to_add: Any, **kwargs: Any) -> MutateRecordSchema:
+        query = gql(
+            """
+            mutation mutateRecordSchema($schemaToAdd: JSON!) {
+              recordSchema(schemaToAdd: $schemaToAdd) {
+                count
+                schemas {
+                  id
+                  name
+                  description
+                  fieldDefinitions {
+                    __typename
+                    ...BoolFieldDefinition
+                    ...DateFieldDefinition
+                    ...DateTimeFieldDefinition
+                    ...EmailFieldDefinition
+                    ...EnumFieldDefinition
+                    ...FloatFieldDefinition
+                    ...IntFieldDefinition
+                    ...JsonFieldDefinition
+                    ...ListFieldDefinition
+                    ...StrFieldDefinition
+                    ...UuidFieldDefinition
+                    ...ObjectFieldDefinition
+                  }
+                }
+              }
+            }
+
+            fragment BoolFieldDefinition on BoolFieldGql {
+              id
+              label
+              description
+              defaultBool
+            }
+
+            fragment DateFieldDefinition on DateFieldGql {
+              id
+              label
+              description
+              defaultDate
+            }
+
+            fragment DateTimeFieldDefinition on DateTimeFieldGql {
+              id
+              label
+              description
+              defaultDatetime
+            }
+
+            fragment EmailFieldDefinition on EmailFieldGql {
+              id
+              label
+              description
+              defaultEmail
+            }
+
+            fragment EnumFieldDefinition on EnumFieldGql {
+              id
+              label
+              description
+              allowedValues
+              defaultStr
+            }
+
+            fragment FloatFieldDefinition on FloatFieldGql {
+              id
+              label
+              description
+              defaultFloat
+              geFloat
+              leFloat
+            }
+
+            fragment IntFieldDefinition on IntFieldGql {
+              id
+              label
+              description
+              defaultInt
+              geInt
+              leInt
+            }
+
+            fragment JsonFieldDefinition on JsonFieldGql {
+              id
+              label
+              description
+              defaultDict
+            }
+
+            fragment ListFieldDefinition on ListFieldGql {
+              id
+              label
+              description
+              defaultList
+            }
+
+            fragment ObjectFieldDefinition on ObjectFieldGql {
+              id
+              label
+              description
+            }
+
+            fragment StrFieldDefinition on StrFieldGql {
+              id
+              label
+              description
+              defaultStr
+              minLength
+              maxLength
+            }
+
+            fragment UuidFieldDefinition on UuidFieldGql {
+              id
+              label
+              description
+              defaultUuid
+            }
+            """
+        )
+        variables: Dict[str, object] = {"schemaToAdd": schema_to_add}
+        response = await self.execute(query=query, operation_name="mutateRecordSchema", variables=variables, **kwargs)
+        data = self.get_data(response)
+        return MutateRecordSchema.model_validate(data)
+
+    async def mutate_records(self, record_schema_id: Any, records: Any, **kwargs: Any) -> MutateRecords:
+        query = gql(
+            """
+            mutation mutateRecords($recordSchemaId: UUID!, $records: JSON!) {
+              records(recordSchemaId: $recordSchemaId, records: $records) {
+                count
+                records
+              }
+            }
+            """
+        )
+        variables: Dict[str, object] = {
+            "recordSchemaId": record_schema_id,
+            "records": records,
+        }
+        response = await self.execute(query=query, operation_name="mutateRecords", variables=variables, **kwargs)
+        data = self.get_data(response)
+        return MutateRecords.model_validate(data)
