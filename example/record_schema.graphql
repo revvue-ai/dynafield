@@ -1,0 +1,209 @@
+# Example GraphQL schema showing how record schemas and records can be queried.
+
+
+fragment BoolFieldDefinition on BoolFieldGql {
+    id
+    label
+    description
+    defaultBool
+}
+
+fragment DateFieldDefinition on DateFieldGql {
+    id
+    label
+    description
+    defaultDate
+}
+
+fragment DateTimeFieldDefinition on DateTimeFieldGql {
+    id
+    label
+    description
+    defaultDatetime
+}
+
+fragment EmailFieldDefinition on EmailFieldGql {
+    id
+    label
+    description
+    defaultEmail
+}
+
+fragment EnumFieldDefinition on EnumFieldGql {
+    id
+    label
+    description
+    allowedValues
+    defaultStr
+}
+
+fragment FloatFieldDefinition on FloatFieldGql {
+    id
+    label
+    description
+    defaultFloat
+    geFloat
+    leFloat
+}
+
+fragment IntFieldDefinition on IntFieldGql {
+    id
+    label
+    description
+    defaultInt
+    geInt
+    leInt
+}
+
+fragment JsonFieldDefinition on JsonFieldGql {
+    id
+    label
+    description
+    defaultDict
+}
+
+fragment ListFieldDefinition on ListFieldGql {
+    id
+    label
+    description
+    defaultList
+}
+
+fragment StrFieldDefinition on StrFieldGql {
+    id
+    label
+    description
+    defaultStr
+    minLength
+    maxLength
+}
+
+fragment UuidFieldDefinition on UuidFieldGql {
+    id
+    label
+    description
+    defaultUuid
+}
+
+fragment ObjectFieldDefinition on ObjectFieldGql {
+    id
+    label
+    description
+    #fields {
+    #  __typename
+    #  ...BoolFieldDefinition
+    #  ...DateFieldDefinition
+    #  ...DateTimeFieldDefinition
+    #  ...EmailFieldDefinition
+    #  ...EnumFieldDefinition
+    #  ...FloatFieldDefinition
+    #  ...IntFieldDefinition
+    #  ...JsonFieldDefinition
+    #  ...ListFieldDefinition
+    #  ...StrFieldDefinition
+    #  ...UuidFieldDefinition
+    #  # Nested object fields repeat the same fragment spreads if required.
+    #}
+}
+
+#fragment RecordFieldDefinitionFragment on RecordFieldDefinition {
+#  __typename
+#  ...BoolFieldDefinition
+#  ...DateFieldDefinition
+#  ...DateTimeFieldDefinition
+#  ...EmailFieldDefinition
+#  ...EnumFieldDefinition
+#  ...FloatFieldDefinition
+#  ...IntFieldDefinition
+#  ...JsonFieldDefinition
+#  ...ListFieldDefinition
+#  ...StrFieldDefinition
+#  ...UuidFieldDefinition
+#  ...ObjectFieldDefinition
+#}
+
+#query RecordSchemaWithRecords($tableName: String!, $schemaId: ID!) {
+#  recordSchema(tableName: $tableName, schemaId: $schemaId) {
+#    schemaId
+#    tenantId
+#    tableName
+#    recordName
+#    description
+#    fieldDefinitions {
+#      ...RecordFieldDefinitionFragment
+#    }
+#  }
+#
+#  records(tableName: $tableName, schemaId: $schemaId) {
+#    schemaId
+#    recordId
+#    data
+#  }
+#}
+#
+
+query queryRecordSchema($recordSchemaId: UUID!){
+    recordSchema(recordSchemaId: $recordSchemaId) {
+        count
+        schemas {
+            id
+            name
+            description
+            fieldDefinitions {
+            ...BoolFieldDefinition
+            ...DateFieldDefinition
+            ...DateTimeFieldDefinition
+            ...EmailFieldDefinition
+            ...EnumFieldDefinition
+            ...FloatFieldDefinition
+            ...IntFieldDefinition
+            ...JsonFieldDefinition
+            ...ListFieldDefinition
+            ...StrFieldDefinition
+            ...UuidFieldDefinition
+            ...ObjectFieldDefinition
+
+            }
+        }
+    }
+}
+
+query queryRecords($recordSchemaId: UUID!){
+    records(recordSchemaId: $recordSchemaId){
+        count
+        records
+    }
+}
+
+mutation mutateRecordSchema($schemaToAdd: JSON!){
+    recordSchema(schemaToAdd: $schemaToAdd) {
+        count
+        schemas {
+            id
+            name
+            description
+            fieldDefinitions {
+            ...BoolFieldDefinition
+            ...DateFieldDefinition
+            ...DateTimeFieldDefinition
+            ...EmailFieldDefinition
+            ...EnumFieldDefinition
+            ...FloatFieldDefinition
+            ...IntFieldDefinition
+            ...JsonFieldDefinition
+            ...ListFieldDefinition
+            ...StrFieldDefinition
+            ...UuidFieldDefinition
+            ...ObjectFieldDefinition
+
+            }
+        }
+    }
+}
+
+mutation mutateRecords($recordSchemaId: UUID!, $records: JSON!){
+    records(recordSchemaId: $recordSchemaId, records: $records){
+        count
+        records
+    }
+}
