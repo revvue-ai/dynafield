@@ -1,0 +1,4 @@
+schema:
+  - http://localhost:1000/graphql
+documents: '**/*.gql'
+watch: true
