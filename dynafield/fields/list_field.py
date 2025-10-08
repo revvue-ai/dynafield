@@ -15,7 +15,10 @@ class ListField(DataTypeFieldBase):
 
     def to_pydantic_field(self) -> tuple[str, tuple[type[list[Any]], Any]]:
         if self.default_list is not None:
-            default_factory = lambda value=self.default_list: deepcopy(value)
+
+            def default_factory(value: list[Any] | None = self.default_list) -> dict[str, Any]:
+                return deepcopy(value)
+
             return self.label, (list[Any], self._build_field(default_factory=default_factory))
 
         return self.label, (list[Any], self._build_field(default=None))

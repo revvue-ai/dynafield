@@ -1,4 +1,5 @@
 from collections import defaultdict
+from typing import Any
 from uuid import UUID
 
 import strawberry
@@ -10,7 +11,7 @@ from dynafield.base_model import BaseModel
 from dynafield.record_schema import RecordSchemaDefinition, RecordSchemaDefinitionGql
 
 db_record_schema: dict[UUID, RecordSchemaDefinition] = {}
-db_records: dict[UUID, list] = defaultdict(list)
+db_records: dict[UUID, list[dict[str, Any]]] = defaultdict(list)
 
 
 class ParseField(BaseModel):
@@ -53,13 +54,13 @@ async def mutate_records(info: Info, record_schema_id: UUID, records: JSON) -> R
     schema = db_record_schema[record_schema_id]
     model = schema.get_pydantic_model()
     values = []
-    serialized_values = []
+    serialized_values: list[dict[str, Any]] = []
     for record in records:
         model_instance = model(**record)
         values.append(model_instance)
         serialized_values.append(model_instance.model_dump(mode="json", exclude_none=True))
 
-    db_records[record_schema_id].append(serialized_values)
+    db_records[record_schema_id].extend(serialized_values)
 
     return Records(records=serialized_values, count=len(serialized_values))
 

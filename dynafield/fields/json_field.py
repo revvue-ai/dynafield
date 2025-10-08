@@ -15,7 +15,10 @@ class JsonField(DataTypeFieldBase):
 
     def to_pydantic_field(self) -> tuple[str, tuple[type[dict[str, Any]], Any]]:
         if self.default_dict is not None:
-            default_factory = lambda value=self.default_dict: deepcopy(value)
+
+            def default_factory(value: dict[str, Any] | None = self.default_dict) -> dict[str, Any] | None:
+                return deepcopy(value) if value is not None else None
+
             return self.label, (dict[str, Any], self._build_field(default_factory=default_factory))
 
         return self.label, (dict[str, Any], self._build_field(default=None))

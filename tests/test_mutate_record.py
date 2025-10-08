@@ -66,7 +66,7 @@ def _schema_payload(schema_definition: RecordSchemaDefinition) -> dict:
 
 
 @pytest.fixture(autouse=True)
-def reset_in_memory_db():
+def reset_in_memory_db() -> None:
     gql.db_record_schema.clear()
     gql.db_records.clear()
     yield
