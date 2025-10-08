@@ -12,12 +12,7 @@ class BoolField(DataTypeFieldBase):
     default_bool: bool | None = Field(default=None, alias="defaultBool")
 
     def to_pydantic_field(self) -> tuple[str, tuple[type[bool], Any]]:
-        field_kwargs: dict[str, Any] = {}
-
-        if self.description:
-            field_kwargs["description"] = self.description
-
-        return self.label, (bool, Field(default=self.default_bool, **field_kwargs))
+        return self.label, (bool, self._build_field(default=self.default_bool))
 
     def to_gql_type(self, extra: dict[str, Any] | None = None) -> "BoolFieldGql":
         obj = BoolFieldGql.from_pydantic(self, extra=extra)
@@ -29,4 +24,5 @@ class BoolFieldGql:
     id: strawberry.auto
     label: strawberry.auto
     description: strawberry.auto
+    required: strawberry.auto
     default_bool: strawberry.auto

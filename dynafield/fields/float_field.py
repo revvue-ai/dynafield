@@ -19,10 +19,8 @@ class FloatField(DataTypeFieldBase):
             field_kwargs["ge"] = self.ge_float
         if self.le_float is not None:
             field_kwargs["le"] = self.le_float
-        if self.description:
-            field_kwargs["description"] = self.description
 
-        return self.label, (float, Field(default=self.default_float, **field_kwargs))
+        return self.label, (float, self._build_field(default=self.default_float, **field_kwargs))
 
     def to_gql_type(self, extra: dict[str, Any] | None = None) -> "FloatFieldGql":
         obj = FloatFieldGql.from_pydantic(self, extra=extra)
@@ -34,6 +32,7 @@ class FloatFieldGql:
     id: strawberry.auto
     label: strawberry.auto
     description: strawberry.auto
+    required: strawberry.auto
     default_float: strawberry.auto
     ge_float: strawberry.auto
     le_float: strawberry.auto

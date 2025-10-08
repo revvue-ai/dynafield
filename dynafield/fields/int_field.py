@@ -19,10 +19,8 @@ class IntField(DataTypeFieldBase):
             field_kwargs["ge"] = self.ge_int
         if self.le_int is not None:
             field_kwargs["le"] = self.le_int
-        if self.description:
-            field_kwargs["description"] = self.description
 
-        return self.label, (int, Field(default=self.default_int, **field_kwargs))
+        return self.label, (int, self._build_field(default=self.default_int, **field_kwargs))
 
     def to_gql_type(self, extra: dict[str, Any] | None = None) -> "IntFieldGql":
         obj = IntFieldGql.from_pydantic(self, extra=extra)
@@ -34,6 +32,7 @@ class IntFieldGql:
     id: strawberry.auto
     label: strawberry.auto
     description: strawberry.auto
+    required: strawberry.auto
     default_int: strawberry.auto
     ge_int: strawberry.auto
     le_int: strawberry.auto

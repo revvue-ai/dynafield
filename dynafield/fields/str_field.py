@@ -19,10 +19,8 @@ class StrField(DataTypeFieldBase):
             field_kwargs["min_length"] = self.min_length
         if self.max_length is not None:
             field_kwargs["max_length"] = self.max_length
-        if self.description:
-            field_kwargs["description"] = self.description
 
-        return self.label, (str, Field(default=self.default_str, **field_kwargs))
+        return self.label, (str, self._build_field(default=self.default_str, **field_kwargs))
 
     def to_gql_type(self, extra: dict[str, Any] | None = None) -> "StrFieldGql":
         obj = StrFieldGql.from_pydantic(self, extra=extra)
@@ -34,6 +32,7 @@ class StrFieldGql:
     id: strawberry.auto
     label: strawberry.auto
     description: strawberry.auto
+    required: strawberry.auto
     default_str: strawberry.auto
     min_length: strawberry.auto
     max_length: strawberry.auto

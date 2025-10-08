@@ -13,12 +13,7 @@ class UuidField(DataTypeFieldBase):
     default_uuid: uuid.UUID | None = None
 
     def to_pydantic_field(self) -> tuple[str, tuple[type[uuid.UUID], Any]]:
-        field_kwargs: dict[str, Any] = {}
-
-        if self.description:
-            field_kwargs["description"] = self.description
-
-        return self.label, (uuid.UUID, Field(default=self.default_uuid, **field_kwargs))
+        return self.label, (uuid.UUID, self._build_field(default=self.default_uuid))
 
     def to_gql_type(self, extra: dict[str, Any] | None = None) -> "UuidFieldGql":
         obj = UuidFieldGql.from_pydantic(self, extra=extra)
@@ -30,4 +25,5 @@ class UuidFieldGql:
     id: strawberry.auto
     label: strawberry.auto
     description: strawberry.auto
+    required: strawberry.auto
     default_uuid: strawberry.auto

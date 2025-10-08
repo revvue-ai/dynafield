@@ -13,7 +13,7 @@ class DateField(DataTypeFieldBase):
     default_date: date | None = Field(default=None, alias="defaultDate")
 
     def to_pydantic_field(self) -> tuple[str, tuple[type[date], Any]]:
-        return self.label, (date, Field(default=self.default_date))
+        return self.label, (date, self._build_field(default=self.default_date))
 
     def to_gql_type(self, extra: dict[str, Any] | None = None) -> "DateFieldGql":
         obj = DateFieldGql.from_pydantic(self, extra=extra)
@@ -25,6 +25,7 @@ class DateFieldGql:
     id: strawberry.auto
     label: strawberry.auto
     description: strawberry.auto
+    required: strawberry.auto
     default_date: strawberry.auto
 
 
@@ -33,12 +34,7 @@ class DateTimeField(DataTypeFieldBase):
     default_datetime: datetime | None = Field(default=None, alias="defaultDatetime")
 
     def to_pydantic_field(self) -> tuple[str, tuple[type[datetime], Any]]:
-        field_kwargs: dict[str, Any] = {}
-
-        if self.description:
-            field_kwargs["description"] = self.description
-
-        return self.label.lower(), (datetime, Field(default=self.default_datetime, **field_kwargs))
+        return self.label.lower(), (datetime, self._build_field(default=self.default_datetime))
 
     def to_gql_type(self, extra: dict[str, Any] | None = None) -> "DateTimeFieldGql":
         obj = DateTimeFieldGql.from_pydantic(self, extra=extra)
@@ -50,4 +46,5 @@ class DateTimeFieldGql:
     id: strawberry.auto
     label: strawberry.auto
     description: strawberry.auto
+    required: strawberry.auto
     default_datetime: strawberry.auto

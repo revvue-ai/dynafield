@@ -1,3 +1,4 @@
+from copy import deepcopy
 from typing import Any, Literal
 
 import strawberry
@@ -13,12 +14,11 @@ class ListField(DataTypeFieldBase):
     default_list: list[Any] | None = Field(default=None, alias="defaultList")
 
     def to_pydantic_field(self) -> tuple[str, tuple[type[list[Any]], Any]]:
-        field_kwargs: dict[str, Any] = {}
+        if self.default_list is not None:
+            default_factory = lambda value=self.default_list: deepcopy(value)
+            return self.label, (list[Any], self._build_field(default_factory=default_factory))
 
-        if self.description:
-            field_kwargs["description"] = self.description
-
-        return self.label, (list[Any], Field(default=self.default_list, **field_kwargs))
+        return self.label, (list[Any], self._build_field(default=None))
 
     def to_gql_type(self, extra: dict[str, Any] | None = None) -> "ListFieldGql":
         obj = ListFieldGql.from_pydantic(self, extra=extra)
@@ -30,4 +30,5 @@ class ListFieldGql:
     id: strawberry.auto
     label: strawberry.auto
     description: strawberry.auto
+    required: strawberry.auto
     default_list: JSON

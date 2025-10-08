@@ -15,10 +15,7 @@ class ObjectField(DataTypeFieldBase):
 
     def to_pydantic_field(self) -> tuple[str, tuple[type[BaseModel], Any]]:
         nested_model = build_dynamic_model(f"{self.label.title()}SubModel", self.fields)
-        field_kwargs: dict[str, Any] = {}
-        if self.description:
-            field_kwargs["description"] = self.description
-        return self.label, (nested_model, Field(**field_kwargs))
+        return self.label, (nested_model, self._build_field(default=None))
 
     def to_gql_type(self, extra: dict[str, Any] | None = None) -> "ObjectFieldGql":
         obj = ObjectFieldGql.from_pydantic(self, extra=extra)
@@ -30,4 +27,5 @@ class ObjectFieldGql:
     id: strawberry.auto
     label: strawberry.auto
     description: strawberry.auto
+    required: strawberry.auto
     fields: JSON
