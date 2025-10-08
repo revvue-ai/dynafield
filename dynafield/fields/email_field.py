@@ -12,12 +12,7 @@ class EmailField(DataTypeFieldBase):
     default_email: EmailStr | None = Field(default=None, alias="defaultEmail")
 
     def to_pydantic_field(self) -> tuple[str, tuple[type[EmailStr], Any]]:
-        field_kwargs: dict[str, Any] = {}
-
-        if self.description:
-            field_kwargs["description"] = self.description
-
-        return self.label, (EmailStr, Field(default=self.default_email, **field_kwargs))
+        return self.label, (EmailStr, self._build_field(default=self.default_email))
 
     def to_gql_type(self, extra: dict[str, Any] | None = None) -> "EmailFieldGql":
         obj = EmailFieldGql.from_pydantic(self, extra=extra)
@@ -29,4 +24,5 @@ class EmailFieldGql:
     id: strawberry.auto
     label: strawberry.auto
     description: strawberry.auto
+    required: strawberry.auto
     default_email: strawberry.auto

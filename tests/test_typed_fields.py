@@ -32,6 +32,14 @@ def test_str_field_constraints():
         model_cls(name="toolong")
 
 
+def test_required_field_enforced():
+    field = StrField(label="name", min_length=1, required=True)
+    model_cls = build_dynamic_model("RequiredStrModel", [field])
+
+    with pytest.raises(ValidationError):
+        model_cls()
+
+
 def test_int_field_bounds():
     field = IntField(label="age", ge_int=18, le_int=65, default_int=30)
     model_cls = build_dynamic_model("IntModel", [field])
@@ -85,12 +93,38 @@ def test_json_field():
     assert obj.config == value
 
 
+def test_json_field_default_factory_creates_fresh_instances():
+    field = JsonField(label="settings", default_dict={"theme": "light"})
+    model_cls = build_dynamic_model("JsonDefaultModel", [field])
+
+    first = model_cls()
+    second = model_cls()
+
+    first.settings["theme"] = "dark"
+
+    assert first.settings["theme"] == "dark"
+    assert second.settings["theme"] == "light"
+
+
 def test_list_field():
     value = [1, 2, 3]
     field = ListField(label="items", default_list=value)
     model_cls = build_dynamic_model("ListModel", [field])
     obj = model_cls(items=value)
     assert obj.items == value
+
+
+def test_list_field_default_factory_creates_fresh_instances():
+    field = ListField(label="tags", default_list=["foo"])
+    model_cls = build_dynamic_model("ListDefaultModel", [field])
+
+    first = model_cls()
+    second = model_cls()
+
+    first.tags.append("bar")
+
+    assert first.tags == ["foo", "bar"]
+    assert second.tags == ["foo"]
 
 
 def test_email_field():

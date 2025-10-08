@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dynafield"
-version = "0.0.2"
+version = "0.0.3"
 description = "Dynamic fields build up schema"
 readme = "README.md"
 authors = [
@@ -108,12 +108,15 @@ ignore = ["E501"]
 "test_multi_document_agent.py" = ["E402", "F811"]
 
 [tool.mypy]
-exclude = "build/"
+strict = true
+exclude = ["build/", "tests"]
+allow_untyped_decorators = true
 ignore_missing_imports = true
 plugins = [
     "pydantic.mypy",
     "strawberry.ext.mypy_plugin",
 ]
+
 
 #--- Ariadne codgen of revvue client code config -----------------------------------------------------------------------
 [tool.ariadne-codegen]

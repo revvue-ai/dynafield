@@ -8,6 +8,7 @@ from uuid import UUID
 import strawberry
 from pydantic import Field
 
+from dynafield import build_dynamic_model
 from dynafield.base_model import BaseModel
 from dynafield.fields.bool_field import BoolField, BoolFieldGql
 from dynafield.fields.date_field import (
@@ -25,7 +26,6 @@ from dynafield.fields.list_field import ListField, ListFieldGql
 from dynafield.fields.object_field import ObjectField, ObjectFieldGql
 from dynafield.fields.str_field import StrField, StrFieldGql
 from dynafield.fields.uuid_field import UuidField, UuidFieldGql
-from dynafield.from_func import build_dynamic_model
 from dynafield.utils import uuid_7
 
 TypeFieldsUnionGql = (
@@ -109,15 +109,15 @@ class RecordSchemaRegistry:
     def build_model(self, schema_id: UUID) -> type[BaseModel]:
         return self.get(schema_id).build_record_model()
 
-    def build_records(self, schema_id: UUID, stored_records: Iterable[dict]) -> list[BaseModel]:
+    def build_records(self, schema_id: UUID, stored_records: Iterable[dict[str, Any]]) -> list[BaseModel]:
         model_cls = self.build_model(schema_id)
         return [model_cls(**record) for record in stored_records]
 
     def mutate_records(
         self,
         schema_id: UUID,
-        stored_records: list[dict],
-        updates: list[dict],
+        stored_records: list[dict[str, Any]],
+        updates: list[dict[str, Any]],
     ) -> list[BaseModel]:
         model_cls = self.build_model(schema_id)
         typed_records: list[BaseModel] = []

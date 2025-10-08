@@ -5,6 +5,7 @@ import uuid
 from datetime import date, datetime
 from typing import Literal, Union, get_args, get_origin
 
+from dynafield.base_model import BaseModel
 from dynafield.fields.base_field import build_dynamic_model
 from dynafield.fields.bool_field import BoolField
 from dynafield.fields.date_field import DateField, DateTimeField
@@ -244,7 +245,7 @@ def fields_from_function(func: t.Callable, overrides: dict[str, dict] | None = N
     return _fields_from_annotations(annotations, defaults=defaults, overrides=overrides)
 
 
-def build_model_from_function(func: t.Callable, *, name: str | None = None, overrides: dict[str, dict] | None = None):
+def build_model_from_function(func: t.Callable, *, name: str | None = None, overrides: dict[str, dict] | None = None) -> type[BaseModel]:
     model_name = name or f"{func.__name__.capitalize()}Model"
     flds = fields_from_function(func, overrides=overrides)
     return build_dynamic_model(model_name, flds)
