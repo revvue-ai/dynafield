@@ -32,5 +32,3 @@ class StrFieldGql:
     description: strawberry.auto
     required: strawberry.auto
     default_str: strawberry.auto
-    min_length: strawberry.auto
-    max_length: strawberry.auto
