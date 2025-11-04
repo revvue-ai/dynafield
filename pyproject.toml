@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dynafield"
-version = "0.0.6"
+version = "0.0.7"
 description = "Dynamic fields build up schema"
 readme = "README.md"
 authors = [
@@ -25,23 +25,12 @@ classifiers = [
     "Programming Language :: Python :: 3",
 ]
 dependencies = [
-    "uvicorn==0.35.0", # ASGI server for FastAPI (production/development)
+    "uvicorn", # ASGI server for FastAPI (production/development)
     "pydantic[email]",
-    "cryptography",
-    "redis",
-    "polars",
-    "python-redis-lock",
-    "zstd",
-    "pynacl",
-    "dockerbuildsystem",
     "httpx",
     "fastapi",
     "uuid-utils",
     "strawberry-graphql[debug-server,fastapi]>=0.283.1",
-    "alembic>=1.16.5",
-    "sqlmodel>=0.0.25",
-    "sqlalchemy>=2.0.43",
-    "sqlalchemy-utils>=0.42.0",
 ]
 
 [dependency-groups]

@@ -119,7 +119,7 @@ class BaseModel(pyBaseModel):
         return incoming
 
     @classmethod
-    def safe_validate(cls, data: dict):
+    def safe_validate(cls, data: dict) -> "BaseModel":
         try:
             return cls.model_validate(data)
         except ValidationError as e:

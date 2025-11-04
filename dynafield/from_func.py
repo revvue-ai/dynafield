@@ -191,7 +191,7 @@ def _choose_field_for(name: str, ann: t.Any):
     # Heuristic: str named like email → EmailField; else StrField
     if ann in (str,):
 
-        def f(default):
+        def f(default: t.Any) -> t.Any:
             kw = {}
             if "email" in name.lower():
                 if default is not inspect._empty:
@@ -205,7 +205,7 @@ def _choose_field_for(name: str, ann: t.Any):
         return f
 
     # Fallback to JsonField
-    def f2(default):
+    def f2(default: t.Any) -> t.Any:
         kw = {}
         if default is not inspect._empty:
             kw["default_dict"] = default if isinstance(default, dict) else {"value": default}
@@ -214,7 +214,9 @@ def _choose_field_for(name: str, ann: t.Any):
     return f2
 
 
-def _fields_from_annotations(annotations: dict[str, t.Any], defaults: dict[str, t.Any] | None = None, overrides: dict[str, dict] | None = None):
+def _fields_from_annotations(
+    annotations: dict[str, t.Any], defaults: dict[str, t.Any] | None = None, overrides: dict[str, dict[str, t.Any]] | None = None
+) -> t.Any:
     defaults = defaults or {}
     overrides = overrides or {}
     fields = []
@@ -238,14 +240,16 @@ def _fields_from_annotations(annotations: dict[str, t.Any], defaults: dict[str, 
     return fields
 
 
-def fields_from_function(func: t.Callable, overrides: dict[str, dict] | None = None):
+def fields_from_function(func: t.Callable[..., t.Any], overrides: dict[str, dict[str, t.Any]] | None = None) -> t.Any:
     sig = inspect.signature(func)
     annotations = {k: p.annotation for k, p in sig.parameters.items() if k != "self"}
     defaults = {k: (p.default if p.default is not inspect._empty else inspect._empty) for k, p in sig.parameters.items() if k != "self"}
     return _fields_from_annotations(annotations, defaults=defaults, overrides=overrides)
 
 
-def build_model_from_function(func: t.Callable, *, name: str | None = None, overrides: dict[str, dict] | None = None) -> type[BaseModel]:
+def build_model_from_function(
+    func: t.Callable[..., t.Any], *, name: str | None = None, overrides: dict[str, dict[str, t.Any]] | None = None
+) -> type[BaseModel]:
     model_name = name or f"{func.__name__.capitalize()}Model"
     flds = fields_from_function(func, overrides=overrides)
     return build_dynamic_model(model_name, flds)
