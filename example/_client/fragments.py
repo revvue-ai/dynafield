@@ -88,6 +88,10 @@ class StrFieldDefinition(BaseModel):
     label: str
     description: Optional[str]
     default_str: Optional[str] = Field(alias="defaultStr")
+    constraints_str: "StrFieldDefinitionConstraintsStr" = Field(alias="constraintsStr")
+
+
+class StrFieldDefinitionConstraintsStr(BaseModel):
     min_length: Optional[int] = Field(alias="minLength")
     max_length: Optional[int] = Field(alias="maxLength")
 

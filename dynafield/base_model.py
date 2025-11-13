@@ -119,11 +119,11 @@ class BaseModel(pyBaseModel):
         return incoming
 
     @classmethod
-    def safe_validate(cls, data: dict) -> "BaseModel":
+    def safe_validate(cls, data: dict[str, Any]) -> "BaseModel":
         try:
             return cls.model_validate(data)
         except ValidationError as e:
-            values: dict[str | int, Any] = {}
+            values: dict[str, Any] = {}
             # for each error, just set field to None
             for err in e.errors():
                 field = err["loc"][0]

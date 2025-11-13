@@ -123,8 +123,10 @@ class Client(AsyncBaseClient):
               label
               description
               defaultStr
-              minLength
-              maxLength
+              constraintsStr {
+                minLength
+                maxLength
+              }
             }
 
             fragment UuidFieldDefinition on UuidFieldGql {
@@ -264,8 +266,10 @@ class Client(AsyncBaseClient):
               label
               description
               defaultStr
-              minLength
-              maxLength
+              constraintsStr {
+                minLength
+                maxLength
+              }
             }
 
             fragment UuidFieldDefinition on UuidFieldGql {

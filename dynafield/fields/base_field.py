@@ -10,17 +10,17 @@ from dynafield.utils import uuid_7
 
 
 class FieldTypeEnum(str, Enum):
-    UuidField = "UuidField"
-    StrField = "StringField"
-    EmailField = "EmailField"
-    IntField = "IntField"
-    FloatField = "FloatField"
-    BoolField = "BooleanField"
-    DateField = "DateField"
-    DateTimeField = "DateTimeField"
-    JsonField = "JsonField"
-    ListField = "ListField"
-    EnumField = "EnumField"
+    UuidField = "UuidFieldGql"
+    StrField = "StrFieldGql"
+    EmailField = "EmailFieldGql"
+    IntField = "IntFieldGql"
+    FloatField = "FloatFieldGql"
+    BoolField = "BoolFieldGql"
+    DateField = "DateFieldGql"
+    DateTimeField = "DateTimeFieldGql"
+    JsonField = "JsonFieldGql"
+    ListField = "ListFieldGql"
+    EnumField = "EnumFieldGql"
 
     def to_py_type(self) -> Any:
         type_mapping = {

@@ -1,5 +1,19 @@
 # Example GraphQL schema showing how record schemas and records can be queried.
+"""
+Ariadne code gen bug.... to support new stuff we need to patch it
+got to file->
+vi .venv/lib/python3.12/site-packages/ariadne_codegen/client_generators/result_types.py
 
+top file import:
+from graphql import GraphQLNonNull, GraphQLString  # at top of file
+
+replace:
+GraphQLNonNull(type_=GraphQLScalarType(name="String"))
+
+with:
+GraphQLNonNull(GraphQLString)
+
+"""
 
 fragment BoolFieldDefinition on BoolFieldGql {
     id
@@ -74,8 +88,10 @@ fragment StrFieldDefinition on StrFieldGql {
     label
     description
     defaultStr
-    minLength
-    maxLength
+    constraintsStr {
+        minLength
+        maxLength
+    }
 }
 
 fragment UuidFieldDefinition on UuidFieldGql {
@@ -106,41 +122,6 @@ fragment ObjectFieldDefinition on ObjectFieldGql {
     #}
 }
 
-#fragment RecordFieldDefinitionFragment on RecordFieldDefinition {
-#  __typename
-#  ...BoolFieldDefinition
-#  ...DateFieldDefinition
-#  ...DateTimeFieldDefinition
-#  ...EmailFieldDefinition
-#  ...EnumFieldDefinition
-#  ...FloatFieldDefinition
-#  ...IntFieldDefinition
-#  ...JsonFieldDefinition
-#  ...ListFieldDefinition
-#  ...StrFieldDefinition
-#  ...UuidFieldDefinition
-#  ...ObjectFieldDefinition
-#}
-
-#query RecordSchemaWithRecords($tableName: String!, $schemaId: ID!) {
-#  recordSchema(tableName: $tableName, schemaId: $schemaId) {
-#    schemaId
-#    tenantId
-#    tableName
-#    recordName
-#    description
-#    fieldDefinitions {
-#      ...RecordFieldDefinitionFragment
-#    }
-#  }
-#
-#  records(tableName: $tableName, schemaId: $schemaId) {
-#    schemaId
-#    recordId
-#    data
-#  }
-#}
-#
 
 query queryRecordSchema($recordSchemaId: UUID!){
     recordSchema(recordSchemaId: $recordSchemaId) {
@@ -162,7 +143,6 @@ query queryRecordSchema($recordSchemaId: UUID!){
             ...StrFieldDefinition
             ...UuidFieldDefinition
             ...ObjectFieldDefinition
-
             }
         }
     }
@@ -195,7 +175,6 @@ mutation mutateRecordSchema($schemaToAdd: JSON!){
             ...StrFieldDefinition
             ...UuidFieldDefinition
             ...ObjectFieldDefinition
-
             }
         }
     }

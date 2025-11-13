@@ -157,6 +157,5 @@ async def test_mutate_records_and_fetch_records(graphql_client: Client):
     assert isinstance(fetched_batches, list)
     assert len(fetched_batches) == 1
     fetched_records = fetched_batches[0]
-    assert isinstance(fetched_records, list)
-    assert fetched_records[0]["bookingId"] == "BK-42"
-    assert fetched_records[0]["numberOfGuests"] == 4
+    assert fetched_records["bookingId"] == "BK-42"
+    assert fetched_records["numberOfGuests"] == 4

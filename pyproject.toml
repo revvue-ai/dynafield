@@ -17,7 +17,7 @@ maintainers = [
 ]
 license = { text = "Apache-2.0" }
 requires-python = ">=3.12,<3.13"
-keywords = ["redis", "cache", "memoization", "toolkit", "async"]
+keywords = ["dynamic fields", "toolkit", "async"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",

@@ -22,6 +22,7 @@ from .fragments import (
     ListFieldDefinition,
     ObjectFieldDefinition,
     StrFieldDefinition,
+    StrFieldDefinitionConstraintsStr,
     UuidFieldDefinition,
 )
 from .mutate_record_schema import (
@@ -115,6 +116,7 @@ __all__ = [
     "QueryRecords",
     "QueryRecordsRecords",
     "StrFieldDefinition",
+    "StrFieldDefinitionConstraintsStr",
     "Upload",
     "UuidFieldDefinition",
 ]
