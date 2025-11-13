@@ -19,7 +19,7 @@ from dynafield.fields.list_field import ListField
 from dynafield.fields.str_field import StrField
 from dynafield.utils import uuid_7
 from example import gql
-from example._client import Client
+from example.client import Client
 from example.gql import Schema
 
 customer_fields = [

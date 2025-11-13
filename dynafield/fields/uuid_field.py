@@ -9,7 +9,7 @@ from dynafield.fields.base_field import DataTypeFieldBase, FieldTypeEnum
 
 
 class UuidField(DataTypeFieldBase):
-    typename__: Literal[FieldTypeEnum.UuidField] = Field(default=FieldTypeEnum.UuidField, alias="__typename")
+    typename__: Literal[FieldTypeEnum.UuidField.name] = Field(default=FieldTypeEnum.UuidField.name, alias="__typename")  # type: ignore # mypy does not accept this
     default_uuid: uuid.UUID | None = None
 
     def to_pydantic_field(self) -> tuple[str, tuple[type[uuid.UUID], Any]]:

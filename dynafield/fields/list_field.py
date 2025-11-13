@@ -10,7 +10,7 @@ from dynafield.fields.base_field import DataTypeFieldBase, FieldTypeEnum
 
 
 class ListField(DataTypeFieldBase):
-    typename__: Literal[FieldTypeEnum.ListField] = Field(default=FieldTypeEnum.ListField, alias="__typename")
+    typename__: Literal[FieldTypeEnum.ListField.name] = Field(default=FieldTypeEnum.ListField.name, alias="__typename")  # type: ignore # mypy does not accept this
     default_list: list[Any] | None = Field(default=None, alias="defaultList")
 
     def to_pydantic_field(self) -> tuple[str, tuple[type[list[Any]], Any]]:

@@ -10,7 +10,7 @@ from dynafield.fields.base_field import DataTypeFieldBase, FieldTypeEnum
 
 
 class JsonField(DataTypeFieldBase):
-    typename__: Literal[FieldTypeEnum.JsonField] = Field(default=FieldTypeEnum.JsonField, alias="__typename")
+    typename__: Literal[FieldTypeEnum.JsonField.name] = Field(default=FieldTypeEnum.JsonField.name, alias="__typename")  # type: ignore # mypy does not accept this
     default_dict: dict[str, Any] | None = Field(default=None, alias="defaultDict")
 
     def to_pydantic_field(self) -> tuple[str, tuple[type[dict[str, Any]], Any]]:

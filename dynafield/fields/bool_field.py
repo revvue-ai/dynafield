@@ -8,7 +8,7 @@ from dynafield.fields.base_field import DataTypeFieldBase, FieldTypeEnum
 
 
 class BoolField(DataTypeFieldBase):
-    typename__: Literal[FieldTypeEnum.BoolField] = Field(default=FieldTypeEnum.BoolField, alias="__typename")
+    typename__: Literal[FieldTypeEnum.BoolField.name] = Field(default=FieldTypeEnum.BoolField.name, alias="__typename")  # type: ignore # mypy does not accept this
     default_bool: bool | None = Field(default=None, alias="defaultBool")
 
     def to_pydantic_field(self) -> tuple[str, tuple[type[bool], Any]]:

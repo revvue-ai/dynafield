@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dynafield"
-version = "0.0.7"
+version = "0.0.8"
 description = "Dynamic fields build up schema"
 readme = "README.md"
 authors = [
@@ -30,7 +30,7 @@ dependencies = [
     "httpx",
     "fastapi",
     "uuid-utils",
-    "strawberry-graphql[debug-server,fastapi]>=0.283.1",
+    "strawberry-graphql[debug-server,fastapi]",
 ]
 
 [dependency-groups]
@@ -98,7 +98,6 @@ ignore = ["E501"]
 
 [tool.mypy]
 strict = true
-exclude = ["build/", "tests"]
 allow_untyped_decorators = true
 ignore_missing_imports = true
 plugins = [
@@ -106,15 +105,23 @@ plugins = [
     "strawberry.ext.mypy_plugin",
 ]
 
+[[tool.mypy.overrides]]
+module = [
+    "tests.*",
+    "example.*",
+    "build.*",
+]
+ignore_missing_imports = true
+ignore_errors = true
 
 #--- Ariadne codgen of revvue client code config -----------------------------------------------------------------------
 [tool.ariadne-codegen]
 remote_schema_url = "http://localhost:1000/graphql"
 queries_path = "example"
-target_package_name = "_client"
+target_package_name = "client"
 target_package_path = "example"
 
 [tool.ariadne-codegen.scalars.DateTime]
 type = "datetime.datetime"
-# ----------------------------------------------------------------------------------------------------s------------------
+# ----------------------------------------------------------------------------------------------------------------------
 

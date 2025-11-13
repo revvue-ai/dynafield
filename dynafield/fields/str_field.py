@@ -18,9 +18,9 @@ class StrFieldConstraints(BaseModel):
 
 
 class StrField(DataTypeFieldBase):
-    typename__: Literal[FieldTypeEnum.StrField] = Field(default=FieldTypeEnum.StrField, alias="__typename")
-    default_str: str | None = None
-    constraints_str: StrFieldConstraints | None = None
+    typename__: Literal[FieldTypeEnum.StrField.name] = Field(default=FieldTypeEnum.StrField.name, alias="__typename")  # type: ignore # mypy does not accept this
+    default_str: str | None = Field(default=None, alias="defaultStr")
+    constraints_str: StrFieldConstraints | None = Field(default=None, alias="constraintsStr")
 
     def to_pydantic_field(self) -> tuple[str, tuple[type[str], Any]]:
         field_kwargs: dict[str, Any] = {}
@@ -36,10 +36,9 @@ class StrField(DataTypeFieldBase):
         return obj
 
 
-@pyd_type(model=StrFieldConstraints)
+@pyd_type(model=StrFieldConstraints, all_fields=True)
 class StrFieldConstraintsGql:
-    min_length: strawberry.auto
-    max_length: strawberry.auto
+    pass
 
 
 @pyd_type(model=StrField)

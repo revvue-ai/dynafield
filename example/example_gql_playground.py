@@ -1,17 +1,115 @@
 # -- Mutate a record schema
 """
-mutation muateRecordSchema($id: String!, $name: String, $fieldDefinitions: JSON) {
-  recordSchema(
-    schemaToAdd: {id: $id, name: $name, fieldDefinitions: $fieldDefinitions}
-  ) {
+mutation M_RecordSchema($schemaToAdd: JSON!) {
+  recordSchema(schemaToAdd: $schemaToAdd) {
     count
+    schemas {
+      id
+      name
+      description
+      fieldDefinitions {
+        ... on BoolFieldGql {
+          id
+          label
+          description
+          required
+          defaultBool
+        }
+        ... on DateFieldGql {
+          id
+          label
+          description
+          required
+          defaultDate
+        }
+        ... on DateTimeFieldGql {
+          id
+          label
+          description
+          required
+          defaultDatetime
+        }
+        ... on EmailFieldGql {
+          id
+          label
+          description
+          required
+          defaultEmail
+        }
+        ... on EnumFieldGql {
+          id
+          label
+          description
+          required
+          allowedValues
+          defaultStr
+        }
+        ... on FloatFieldGql {
+          id
+          label
+          description
+          required
+          geFloat
+          leFloat
+          defaultFloat
+        }
+        ... on IntFieldGql {
+          id
+          label
+          description
+          required
+          geInt
+          leInt
+          defaultInt
+        }
+        ... on JsonFieldGql {
+          id
+          label
+          description
+          required
+          defaultDict
+        }
+        ... on ListFieldGql {
+          id
+          label
+          description
+          required
+          defaultList
+        }
+        ... on StrFieldGql {
+          id
+          label
+          description
+          required
+          defaultStr
+          constraintsStr {
+            maxLength
+            minLength
+          }
+        }
+        ... on UuidFieldGql {
+          id
+          label
+          description
+          required
+          defaultUuid
+        }
+        ... on ObjectFieldGql {
+          id
+          label
+          description
+          required
+          fields
+        }
+      }
+    }
   }
 }
 """
 
 # ---- values
 """
-{
+{"schemaToAdd": {
   "id": "0199c0c1-816d-7233-988e-cb355508bef1",
   "name": "customerField",
   "fieldDefinitions": [
@@ -19,7 +117,7 @@ mutation muateRecordSchema($id: String!, $name: String, $fieldDefinitions: JSON)
       "label": "tag",
       "description": "Constant literal indicating this is a booking super tag.",
       "default_str": "booking",
-      "__typename": "StringField"
+      "__typename": "StrField"
     },
     {
       "label": "numberOfGuests",
@@ -31,11 +129,11 @@ mutation muateRecordSchema($id: String!, $name: String, $fieldDefinitions: JSON)
     },
     {
       "label": "firstName",
-      "__typename": "StringField"
+      "__typename": "StrField"
     },
     {
       "label": "lastName",
-      "__typename": "StringField"
+      "__typename": "StrField"
     },
     {
       "label": "email",
@@ -43,11 +141,11 @@ mutation muateRecordSchema($id: String!, $name: String, $fieldDefinitions: JSON)
     },
     {
       "label": "phone",
-      "__typename": "StringField"
+      "__typename": "StrField"
     },
     {
       "label": "specialRequest",
-      "__typename": "StringField"
+      "__typename": "StrField"
     },
     {
       "label": "requestType",
@@ -64,7 +162,7 @@ mutation muateRecordSchema($id: String!, $name: String, $fieldDefinitions: JSON)
     },
     {
       "label": "bookingId",
-      "__typename": "StringField"
+      "__typename": "StrField"
     },
     {
       "label": "evidence",
@@ -73,7 +171,7 @@ mutation muateRecordSchema($id: String!, $name: String, $fieldDefinitions: JSON)
       "__typename": "ListField"
     }
     ]
-}
+}}
 """
 
 # -- Mutate a record
@@ -93,7 +191,6 @@ mutation mutateRecord($recordSchemaId: UUID!, $records: JSON!) {
   "records": [{"requestType": "NEW_BOOKING", "numberOfGuests": 4, "date": "2025-01-01T00:00:00", "firstName": "Ada", "lastName": "Lovelace", "email": "ada@example.com", "evidence": [{"field": "date", "text": "Tomorrow 19:00"}]}]
 }
 """
-
 
 # -- query record schema
 """
@@ -212,5 +309,3 @@ fragment ObjectFieldDefinition on ObjectFieldGql {
   description
 }
 """
-
-# -- query record

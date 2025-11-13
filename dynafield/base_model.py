@@ -127,7 +127,8 @@ class BaseModel(pyBaseModel):
             # for each error, just set field to None
             for err in e.errors():
                 field = err["loc"][0]
-                values[field] = None
+                if isinstance(field, str):
+                    values[field] = None
             m = cls(**(data | values))
             return m
 

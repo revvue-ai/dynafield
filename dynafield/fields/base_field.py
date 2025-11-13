@@ -21,6 +21,7 @@ class FieldTypeEnum(str, Enum):
     JsonField = "JsonFieldGql"
     ListField = "ListFieldGql"
     EnumField = "EnumFieldGql"
+    ObjectField = "ObjectFieldGql"
 
     def to_py_type(self) -> Any:
         type_mapping = {
@@ -42,7 +43,8 @@ _MISSING = object()
 
 
 class DataTypeFieldBase(BaseModel):
-    id: str = Field(default_factory=lambda: str(uuid_7()))
+    id: uuid.UUID = Field(default_factory=lambda: uuid_7())
+    ref: str | None = None  # Human-readable unique id
     label: str
     description: str | None = None
     required: bool = False
@@ -53,8 +55,8 @@ class DataTypeFieldBase(BaseModel):
         default: Any = _MISSING,
         default_factory: Callable[[], Any] | None = None,
         **field_kwargs: Any,
-    ) -> Field:
-        """Create a ``pydantic.Field`` honouring ``required`` and mutable defaults."""
+    ) -> Any:
+        """Create a ``pydantic.Field`` honoring ``required`` and mutable defaults."""
 
         if self.description:
             field_kwargs.setdefault("description", self.description)
@@ -75,7 +77,7 @@ class DataTypeFieldBase(BaseModel):
         return Field(default=default, **field_kwargs)
 
 
-def build_dynamic_model(name: str, fields: Sequence[DataTypeFieldBase]) -> type[BaseModel]:
+def build_dynamic_model(name: str, fields: Sequence[DataTypeFieldBase]) -> Any:
     field_defs: dict[str, Any] = {}
 
     for field in fields:

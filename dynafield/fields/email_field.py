@@ -8,7 +8,7 @@ from dynafield.fields.base_field import DataTypeFieldBase, FieldTypeEnum
 
 
 class EmailField(DataTypeFieldBase):
-    typename__: Literal[FieldTypeEnum.EmailField] = Field(default=FieldTypeEnum.EmailField, alias="__typename")
+    typename__: Literal[FieldTypeEnum.EmailField.name] = Field(default=FieldTypeEnum.EmailField.name, alias="__typename")
     default_email: EmailStr | None = Field(default=None, alias="defaultEmail")
 
     def to_pydantic_field(self) -> tuple[str, tuple[type[EmailStr], Any]]:

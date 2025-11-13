@@ -6,11 +6,11 @@ from strawberry.experimental.pydantic import type as pyd_type
 from strawberry.scalars import JSON
 
 from dynafield.base_model import BaseModel
-from dynafield.fields.base_field import DataTypeFieldBase, build_dynamic_model
+from dynafield.fields.base_field import DataTypeFieldBase, FieldTypeEnum, build_dynamic_model
 
 
 class ObjectField(DataTypeFieldBase):
-    typename__: Literal["ObjectField"] = Field(default="ObjectField", alias="__typename")
+    typename__: Literal[FieldTypeEnum.ObjectField.name] = Field(default=FieldTypeEnum.ObjectField.name, alias="__typename")  # type: ignore # mypy does not accept this
     fields: list[DataTypeFieldBase]
 
     def to_pydantic_field(self) -> tuple[str, tuple[type[BaseModel], Any]]:

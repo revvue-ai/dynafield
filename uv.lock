@@ -169,7 +169,7 @@ requires-dist = [
     { name = "fastapi" },
     { name = "httpx" },
     { name = "pydantic", extras = ["email"] },
-    { name = "strawberry-graphql", extras = ["debug-server", "fastapi"], specifier = ">=0.283.1" },
+    { name = "strawberry-graphql", extras = ["debug-server", "fastapi"] },
     { name = "uuid-utils" },
     { name = "uvicorn" },
 ]

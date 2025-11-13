@@ -10,35 +10,35 @@ from .base_model import BaseModel
 
 
 class BoolFieldDefinition(BaseModel):
-    id: str
+    id: Any
     label: str
     description: Optional[str]
     default_bool: Optional[bool] = Field(alias="defaultBool")
 
 
 class DateFieldDefinition(BaseModel):
-    id: str
+    id: Any
     label: str
     description: Optional[str]
     default_date: Optional[Any] = Field(alias="defaultDate")
 
 
 class DateTimeFieldDefinition(BaseModel):
-    id: str
+    id: Any
     label: str
     description: Optional[str]
     default_datetime: Optional[datetime] = Field(alias="defaultDatetime")
 
 
 class EmailFieldDefinition(BaseModel):
-    id: str
+    id: Any
     label: str
     description: Optional[str]
     default_email: Optional[str] = Field(alias="defaultEmail")
 
 
 class EnumFieldDefinition(BaseModel):
-    id: str
+    id: Any
     label: str
     description: Optional[str]
     allowed_values: Optional[List[str]] = Field(alias="allowedValues")
@@ -46,45 +46,53 @@ class EnumFieldDefinition(BaseModel):
 
 
 class FloatFieldDefinition(BaseModel):
-    id: str
+    id: Any
     label: str
     description: Optional[str]
     default_float: Optional[float] = Field(alias="defaultFloat")
+    constraints_float: "FloatFieldDefinitionConstraintsFloat" = Field(alias="constraintsFloat")
+
+
+class FloatFieldDefinitionConstraintsFloat(BaseModel):
     ge_float: Optional[float] = Field(alias="geFloat")
     le_float: Optional[float] = Field(alias="leFloat")
 
 
 class IntFieldDefinition(BaseModel):
-    id: str
+    id: Any
     label: str
     description: Optional[str]
     default_int: Optional[int] = Field(alias="defaultInt")
+    constraints_int: "IntFieldDefinitionConstraintsInt" = Field(alias="constraintsInt")
+
+
+class IntFieldDefinitionConstraintsInt(BaseModel):
     ge_int: Optional[int] = Field(alias="geInt")
     le_int: Optional[int] = Field(alias="leInt")
 
 
 class JsonFieldDefinition(BaseModel):
-    id: str
+    id: Any
     label: str
     description: Optional[str]
     default_dict: Any = Field(alias="defaultDict")
 
 
 class ListFieldDefinition(BaseModel):
-    id: str
+    id: Any
     label: str
     description: Optional[str]
     default_list: Any = Field(alias="defaultList")
 
 
 class ObjectFieldDefinition(BaseModel):
-    id: str
+    id: Any
     label: str
     description: Optional[str]
 
 
 class StrFieldDefinition(BaseModel):
-    id: str
+    id: Any
     label: str
     description: Optional[str]
     default_str: Optional[str] = Field(alias="defaultStr")
@@ -97,7 +105,7 @@ class StrFieldDefinitionConstraintsStr(BaseModel):
 
 
 class UuidFieldDefinition(BaseModel):
-    id: str
+    id: Any
     label: str
     description: Optional[str]
     default_uuid: Optional[Any] = Field(alias="defaultUuid")

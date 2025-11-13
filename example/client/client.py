@@ -85,8 +85,10 @@ class Client(AsyncBaseClient):
               label
               description
               defaultFloat
-              geFloat
-              leFloat
+              constraintsFloat {
+                geFloat
+                leFloat
+              }
             }
 
             fragment IntFieldDefinition on IntFieldGql {
@@ -94,8 +96,10 @@ class Client(AsyncBaseClient):
               label
               description
               defaultInt
-              geInt
-              leInt
+              constraintsInt {
+                geInt
+                leInt
+              }
             }
 
             fragment JsonFieldDefinition on JsonFieldGql {
@@ -228,8 +232,10 @@ class Client(AsyncBaseClient):
               label
               description
               defaultFloat
-              geFloat
-              leFloat
+              constraintsFloat {
+                geFloat
+                leFloat
+              }
             }
 
             fragment IntFieldDefinition on IntFieldGql {
@@ -237,8 +243,10 @@ class Client(AsyncBaseClient):
               label
               description
               defaultInt
-              geInt
-              leInt
+              constraintsInt {
+                geInt
+                leInt
+              }
             }
 
             fragment JsonFieldDefinition on JsonFieldGql {

@@ -9,7 +9,7 @@ from dynafield.fields.base_field import DataTypeFieldBase, FieldTypeEnum
 
 
 class DateField(DataTypeFieldBase):
-    typename__: Literal[FieldTypeEnum.DateField] = Field(default=FieldTypeEnum.DateField, alias="__typename")
+    typename__: Literal[FieldTypeEnum.DateField.name] = Field(default=FieldTypeEnum.DateField.name, alias="__typename")  # type: ignore # mypy does not accept this
     default_date: date | None = Field(default=None, alias="defaultDate")
 
     def to_pydantic_field(self) -> tuple[str, tuple[type[date], Any]]:
@@ -30,7 +30,7 @@ class DateFieldGql:
 
 
 class DateTimeField(DataTypeFieldBase):
-    typename__: Literal[FieldTypeEnum.DateTimeField] = Field(default=FieldTypeEnum.DateTimeField, alias="__typename")
+    typename__: Literal[FieldTypeEnum.DateTimeField.name] = Field(default=FieldTypeEnum.DateTimeField.name, alias="__typename")  # type: ignore # mypy does not accept this
     default_datetime: datetime | None = Field(default=None, alias="defaultDatetime")
 
     def to_pydantic_field(self) -> tuple[str, tuple[type[datetime], Any]]:

@@ -1,19 +1,19 @@
 # Example GraphQL schema showing how record schemas and records can be queried.
-"""
-Ariadne code gen bug.... to support new stuff we need to patch it
-got to file->
-vi .venv/lib/python3.12/site-packages/ariadne_codegen/client_generators/result_types.py
-
-top file import:
-from graphql import GraphQLNonNull, GraphQLString  # at top of file
-
-replace:
-GraphQLNonNull(type_=GraphQLScalarType(name="String"))
-
-with:
-GraphQLNonNull(GraphQLString)
-
-"""
+# """
+# Ariadne code gen bug.... to support new stuff we need to patch it
+# got to file->
+# vi .venv/lib/python3.12/site-packages/ariadne_codegen/client_generators/result_types.py
+#
+# top file import:
+# from graphql import GraphQLNonNull, GraphQLString  # at top of file
+#
+# replace:
+# GraphQLNonNull(type_=GraphQLScalarType(name="String"))
+#
+# with:
+# GraphQLNonNull(GraphQLString)
+#
+# """
 
 fragment BoolFieldDefinition on BoolFieldGql {
     id
@@ -56,8 +56,10 @@ fragment FloatFieldDefinition on FloatFieldGql {
     label
     description
     defaultFloat
-    geFloat
-    leFloat
+    constraintsFloat {
+        geFloat
+        leFloat
+    }
 }
 
 fragment IntFieldDefinition on IntFieldGql {
@@ -65,8 +67,10 @@ fragment IntFieldDefinition on IntFieldGql {
     label
     description
     defaultInt
-    geInt
-    leInt
+    constraintsInt {
+        geInt
+        leInt
+    }
 }
 
 fragment JsonFieldDefinition on JsonFieldGql {
@@ -131,18 +135,18 @@ query queryRecordSchema($recordSchemaId: UUID!){
             name
             description
             fieldDefinitions {
-            ...BoolFieldDefinition
-            ...DateFieldDefinition
-            ...DateTimeFieldDefinition
-            ...EmailFieldDefinition
-            ...EnumFieldDefinition
-            ...FloatFieldDefinition
-            ...IntFieldDefinition
-            ...JsonFieldDefinition
-            ...ListFieldDefinition
-            ...StrFieldDefinition
-            ...UuidFieldDefinition
-            ...ObjectFieldDefinition
+                ...BoolFieldDefinition
+                ...DateFieldDefinition
+                ...DateTimeFieldDefinition
+                ...EmailFieldDefinition
+                ...EnumFieldDefinition
+                ...FloatFieldDefinition
+                ...IntFieldDefinition
+                ...JsonFieldDefinition
+                ...ListFieldDefinition
+                ...StrFieldDefinition
+                ...UuidFieldDefinition
+                ...ObjectFieldDefinition
             }
         }
     }
@@ -163,18 +167,18 @@ mutation mutateRecordSchema($schemaToAdd: JSON!){
             name
             description
             fieldDefinitions {
-            ...BoolFieldDefinition
-            ...DateFieldDefinition
-            ...DateTimeFieldDefinition
-            ...EmailFieldDefinition
-            ...EnumFieldDefinition
-            ...FloatFieldDefinition
-            ...IntFieldDefinition
-            ...JsonFieldDefinition
-            ...ListFieldDefinition
-            ...StrFieldDefinition
-            ...UuidFieldDefinition
-            ...ObjectFieldDefinition
+                ...BoolFieldDefinition
+                ...DateFieldDefinition
+                ...DateTimeFieldDefinition
+                ...EmailFieldDefinition
+                ...EnumFieldDefinition
+                ...FloatFieldDefinition
+                ...IntFieldDefinition
+                ...JsonFieldDefinition
+                ...ListFieldDefinition
+                ...StrFieldDefinition
+                ...UuidFieldDefinition
+                ...ObjectFieldDefinition
             }
         }
     }

@@ -10,18 +10,18 @@ from dynafield.fields.bool_field import BoolField
 from dynafield.fields.date_field import DateField, DateTimeField
 from dynafield.fields.email_field import EmailField
 from dynafield.fields.enum_field import EnumField
-from dynafield.fields.float_field import FloatField
-from dynafield.fields.int_field import IntField
+from dynafield.fields.float_field import FloatField, FloatFieldConstraints
+from dynafield.fields.int_field import IntField, IntFieldConstraints
 from dynafield.fields.json_field import JsonField
 from dynafield.fields.list_field import ListField
 from dynafield.fields.object_field import ObjectField
-from dynafield.fields.str_field import StrField
+from dynafield.fields.str_field import StrField, StrFieldConstraints
 from dynafield.fields.uuid_field import UuidField
 from dynafield.from_func import build_model_from_function
 
 
 def test_str_field_constraints():
-    field = StrField(label="name", min_length=2, max_length=5, default_str="abc")
+    field = StrField(label="name", default_str="abc", constraints_str=StrFieldConstraints(min_length=2, max_length=5))
     model_cls = build_dynamic_model("StrModel", [field])
     obj = model_cls(name="test")
     assert obj.name == "test"
@@ -33,7 +33,7 @@ def test_str_field_constraints():
 
 
 def test_required_field_enforced():
-    field = StrField(label="name", min_length=1, required=True)
+    field = StrField(label="name", required=True, constraints_str=StrFieldConstraints(min_length=1))
     model_cls = build_dynamic_model("RequiredStrModel", [field])
 
     with pytest.raises(ValidationError):
@@ -41,7 +41,7 @@ def test_required_field_enforced():
 
 
 def test_int_field_bounds():
-    field = IntField(label="age", ge_int=18, le_int=65, default_int=30)
+    field = IntField(label="age", default_int=30, constraints_int=IntFieldConstraints(ge_int=18, le_int=65))
     model_cls = build_dynamic_model("IntModel", [field])
     obj = model_cls(age=25)
     assert obj.age == 25
@@ -53,7 +53,7 @@ def test_int_field_bounds():
 
 
 def test_float_field_bounds():
-    field = FloatField(label="score", ge_float=0.0, le_float=1.0, default_float=0.5)
+    field = FloatField(label="score", default_float=0.5, constraints_float=FloatFieldConstraints(ge_float=0.0, le_float=1.0))
     model_cls = build_dynamic_model("FloatModel", [field])
     obj = model_cls(score=0.75)
     assert obj.score == 0.75
@@ -78,7 +78,7 @@ def test_date_field():
 
 
 def test_datetime_field():
-    now = datetime.utcnow()
+    now = datetime.now()
     field = DateTimeField(label="timestamp", default_datetime=now)
     model_cls = build_dynamic_model("DateTimeModel", [field])
     obj = model_cls(timestamp=now)
@@ -178,7 +178,7 @@ def test_nested_object_field():
 
 
 def test_combined_model_multiple_field_types():
-    now = datetime.utcnow()
+    now = datetime.now()
     today = date.today()
     uid = uuid.uuid4()
 
@@ -266,7 +266,7 @@ def test_build_from_function_basic_types_and_defaults():
         rating=4.5,
         active=True,
         birthdate=date.today(),
-        joined_at=datetime.utcnow(),
+        joined_at=datetime.now(),
         user_id=uuid.uuid4(),
         status="active",
         tags=["dev", "test"],
@@ -292,8 +292,8 @@ def test_overrides_constraints_and_description():
     def f(name: str, age: int, status: Literal["new", "active", "disabled"] = "active"): ...
 
     overrides = {
-        "name": {"min_length": 2, "max_length": 10, "description": "The user's given name"},
-        "age": {"ge_int": 0, "le_int": 120},
+        "name": {"constraints_str": {"min_length": 2, "max_length": 10}, "description": "The user's given name"},
+        "age": {"constraints_int": {"ge_int": 0, "le_int": 120}},
     }
     Model = build_model_from_function(f, overrides=overrides)
 
@@ -359,7 +359,7 @@ def test_optional_types_are_allowed_when_none():
     assert ok.nickname is None
     assert ok.last_seen is None
 
-    ok2 = Model(nickname="JJ", last_seen=datetime.utcnow())
+    ok2 = Model(nickname="JJ", last_seen=datetime.now())
     assert ok2.nickname == "JJ"
 
 
@@ -416,7 +416,7 @@ def test_pep604_optional_unwraps_and_allows_none():
     ok = Model()  # both omitted → None
     assert ok.nickname is None and ok.last_seen is None
 
-    ok2 = Model(nickname="JJ", last_seen=datetime.utcnow())
+    ok2 = Model(nickname="JJ", last_seen=datetime.now())
     assert ok2.nickname == "JJ"
 
 
@@ -458,16 +458,16 @@ def test_uuid_date_datetime_roundtrip_and_validation():
 
     Model = build_model_from_function(f)
 
-    good = Model(u=uuid.uuid4(), bday=date.today(), seen=datetime.utcnow())
+    good = Model(u=uuid.uuid4(), bday=date.today(), seen=datetime.now())
     assert isinstance(good.u, uuid.UUID)
     assert isinstance(good.bday, date)
     assert isinstance(good.seen, datetime)
 
     # simple negative checks
     with pytest.raises(ValidationError):
-        Model(u="not-uuid", bday=date.today(), seen=datetime.utcnow())
+        Model(u="not-uuid", bday=date.today(), seen=datetime.now())
     with pytest.raises(ValidationError):
-        Model(u=uuid.uuid4(), bday="2020-01-01", seen=datetime.utcnow())
+        Model(u=uuid.uuid4(), bday="wrong Value", seen=datetime.now())
 
 
 def test_object_like_inference_with_annotations_attr():
@@ -480,7 +480,7 @@ def test_object_like_inference_with_annotations_attr():
     def f(profile: Profile, when: datetime): ...
 
     Model = build_model_from_function(f)
-    m = Model(profile={"first": "Ada", "last": "Lovelace"}, when=datetime.utcnow())
+    m = Model(profile={"first": "Ada", "last": "Lovelace"}, when=datetime.now())
     assert m.profile.first == "Ada"
     assert m.profile.last == "Lovelace"
 
@@ -517,8 +517,8 @@ def test_override_constraints_merge_and_description_propagates():
     def f(name: str, age: int): ...
 
     overrides = {
-        "name": {"min_length": 2, "max_length": 6, "description": "Display name"},
-        "age": {"ge_int": 0, "le_int": 120},
+        "name": {"constraints_str": {"min_length": 2, "max_length": 6}, "description": "Display name"},
+        "age": {"constraints_int": {"ge_int": 0, "le_int": 120}},
     }
     Model = build_model_from_function(f, overrides=overrides)
 
@@ -556,7 +556,7 @@ def test_defaults_from_signature_are_used_when_missing():
     def f(
         rating: float = 4.5,
         active: bool = True,
-        since: datetime = datetime.utcnow() - timedelta(days=1),
+        since: datetime = datetime.now() - timedelta(days=1),
         tags: list[str] | None = None,
         profile: dict | None = None,
     ): ...
