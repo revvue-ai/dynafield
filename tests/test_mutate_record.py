@@ -17,7 +17,7 @@ from dynafield.fields.enum_field import EnumField
 from dynafield.fields.int_field import IntField
 from dynafield.fields.list_field import ListField
 from dynafield.fields.str_field import StrField
-from dynafield.utils import uuid_7
+from dynafield.utils.uuid import uuid_7
 from example import gql
 from example.client import Client
 from example.gql import Schema

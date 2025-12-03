@@ -6,7 +6,7 @@ from typing import Any, Callable, Sequence
 from pydantic import EmailStr, Field, create_model
 
 from dynafield.base_model import BaseModel
-from dynafield.utils import uuid_7
+from dynafield.utils.uuid import uuid_7
 
 
 class FieldTypeEnum(str, Enum):
@@ -44,7 +44,6 @@ _MISSING = object()
 
 class DataTypeFieldBase(BaseModel):
     id: uuid.UUID = Field(default_factory=lambda: uuid_7())
-    ref: str | None = None  # Human-readable unique id
     label: str
     description: str | None = None
     required: bool = False
