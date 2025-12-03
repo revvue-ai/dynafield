@@ -259,7 +259,7 @@ wheels = [
 
 [[package]]
 name = "dynafield"
-version = "0.0.10"
+version = "0.0.13"
 source = { editable = "." }
 dependencies = [
     { name = "alembic" },
