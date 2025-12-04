@@ -4,8 +4,8 @@ from typing import Any, Callable, List, Optional
 
 from faststream.rabbit import RabbitBroker, RabbitExchange, RabbitMessage, RabbitQueue
 
-from dynafield.logger.logger_config import get_logger
-from dynafield.utils.formating import parse_structured_traceback
+from ..logger.logger_config import get_logger
+from ..utils.formating import parse_structured_traceback
 
 log = get_logger(__name__)
 

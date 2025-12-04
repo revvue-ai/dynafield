@@ -1,7 +1,7 @@
 # Builder functions for creating filter expressions
 from typing import Any, List, Optional
 
-from dynafield.expressions.types import ColumnFilter, FilterExpression, FilterOperator, LogicalFilter, LogicalOperator
+from .types import ColumnFilter, FilterExpression, FilterOperator, LogicalFilter, LogicalOperator
 
 
 def exp_col(column: str) -> "ColumnFilterBuilder":

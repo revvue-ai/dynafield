@@ -7,7 +7,7 @@ from aio_pika.abc import AbstractChannel, AbstractConnection, AbstractExchange, 
 from aio_pika.pool import Pool
 from pika.exceptions import AMQPError
 
-from dynafield.logger.logger_config import get_logger
+from ..logger.logger_config import get_logger
 
 log = get_logger(__name__)
 

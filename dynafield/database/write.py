@@ -4,8 +4,8 @@ from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio.session import AsyncSession
 from sqlmodel import SQLModel
 
-from dynafield.logger.logger_config import get_logger
-from dynafield.tracing.op import get_tracer
+from ..logger.logger_config import get_logger
+from ..tracing.op import get_tracer
 
 log = get_logger(__name__)
 tracer = get_tracer(__name__)

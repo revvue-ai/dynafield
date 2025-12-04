@@ -13,26 +13,26 @@ from pydantic import Field
 from pydantic.fields import FieldInfo
 from pydantic_core import PydanticUndefined
 
-from dynafield.base_model import BaseModel
-from dynafield.fields.base_field import build_dynamic_model
-from dynafield.fields.bool_field import BoolField, BoolFieldGql
-from dynafield.fields.date_field import (
+from .base_model import BaseModel
+from .fields.base_field import build_dynamic_model
+from .fields.bool_field import BoolField, BoolFieldGql
+from .fields.date_field import (
     DateField,
     DateFieldGql,
     DateTimeField,
     DateTimeFieldGql,
 )
-from dynafield.fields.email_field import EmailField, EmailFieldGql
-from dynafield.fields.enum_field import EnumField, EnumFieldGql
-from dynafield.fields.float_field import FloatField, FloatFieldConstraints, FloatFieldGql
-from dynafield.fields.int_field import IntField, IntFieldGql
-from dynafield.fields.json_field import JsonField, JsonFieldGql
-from dynafield.fields.list_field import ListField, ListFieldGql
-from dynafield.fields.object_field import ObjectField, ObjectFieldGql
-from dynafield.fields.str_field import StrField, StrFieldConstraints, StrFieldGql
-from dynafield.fields.uuid_field import UuidField, UuidFieldGql
-from dynafield.from_func import build_model_from_function
-from dynafield.utils.uuid import uuid_7
+from .fields.email_field import EmailField, EmailFieldGql
+from .fields.enum_field import EnumField, EnumFieldGql
+from .fields.float_field import FloatField, FloatFieldConstraints, FloatFieldGql
+from .fields.int_field import IntField, IntFieldGql
+from .fields.json_field import JsonField, JsonFieldGql
+from .fields.list_field import ListField, ListFieldGql
+from .fields.object_field import ObjectField, ObjectFieldGql
+from .fields.str_field import StrField, StrFieldConstraints, StrFieldGql
+from .fields.uuid_field import UuidField, UuidFieldGql
+from .from_func import build_model_from_function
+from .utils.uuid import uuid_7
 
 TypeFieldsUnionGql = (
     BoolFieldGql

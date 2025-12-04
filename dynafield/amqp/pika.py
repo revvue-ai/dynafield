@@ -8,7 +8,7 @@ import pika
 from faststream.rabbit import RabbitQueue
 from pika.adapters.blocking_connection import BlockingChannel
 
-from dynafield.models.error_msg import ErrorMessage
+from ..models.error_msg import ErrorMessage
 
 log = logging.getLogger(__name__)
 

@@ -1,7 +1,7 @@
 # sql_filter_builder.py
 from typing import Any, List, Tuple
 
-from dynafield.expressions.types import ColumnFilter, FilterExpression, FilterOperator, LogicalFilter, LogicalOperator
+from .types import ColumnFilter, FilterExpression, FilterOperator, LogicalFilter, LogicalOperator
 
 
 class SQLFilterBuilder:

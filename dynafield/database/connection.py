@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Literal
 
-from dynafield import config
+from .. import config
 
 DBUserRole = Literal["migration", "crud"]
 DBConnMode = Literal["sync", "async"]

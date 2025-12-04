@@ -8,7 +8,7 @@ from uuid import UUID
 import strawberry
 from pydantic import BaseModel
 
-from dynafield.logger.logger_config import get_logger
+from ..logger.logger_config import get_logger
 
 log = get_logger()
 

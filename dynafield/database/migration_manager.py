@@ -7,7 +7,7 @@ from alembic import command
 from alembic.config import Config
 from sqlalchemy import Engine, text
 
-from dynafield.logger.logger_config import get_logger
+from ..logger.logger_config import get_logger
 
 log = get_logger(__name__)
 

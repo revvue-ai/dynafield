@@ -8,10 +8,10 @@ from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.pool import NullPool
 
-from dynafield import config, tracing
-from dynafield.base_model import custom_json_deserializer, custom_json_serializer
-from dynafield.database.connection import conn_string
-from dynafield.logger.logger_config import get_logger
+from .. import config, tracing
+from ..base_model import custom_json_deserializer, custom_json_serializer
+from ..database.connection import conn_string
+from ..logger.logger_config import get_logger
 
 log = get_logger(__name__)
 
