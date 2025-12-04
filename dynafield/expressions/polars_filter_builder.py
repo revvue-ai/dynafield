@@ -4,7 +4,7 @@ from typing import Any
 
 import polars as pl
 
-from .types import ColumnFilter, FilterOperator, LogicalFilter, LogicalOperator
+from dynafield.expressions.types import ColumnFilter, FilterOperator, LogicalFilter, LogicalOperator
 
 
 class PolarsFilterBuilder:

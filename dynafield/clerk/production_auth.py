@@ -3,8 +3,8 @@ from typing import Any, Dict, Optional
 
 from fastapi import Request
 
-from .clerk_cache import clerk_cache
-from .token_verifier import token_verifier
+from dynafield.clerk.clerk_cache import clerk_cache
+from dynafield.clerk.token_verifier import token_verifier
 
 logger = logging.getLogger(__name__)
 

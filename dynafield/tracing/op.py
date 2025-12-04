@@ -2,9 +2,9 @@ from fastapi import FastAPI
 from opentelemetry import trace
 from opentelemetry.trace import Span
 
-from .. import config
-from ..logger.logger_config import get_logger
-from .registry import TracingConfig, _registry
+from dynafield import config
+from dynafield.logger.logger_config import get_logger
+from dynafield.tracing.registry import TracingConfig, _registry
 
 log = get_logger(__name__)
 

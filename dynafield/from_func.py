@@ -5,19 +5,19 @@ import uuid
 from datetime import date, datetime
 from typing import Literal, Union, get_args, get_origin
 
-from .base_model import BaseModel
-from .fields.base_field import build_dynamic_model
-from .fields.bool_field import BoolField
-from .fields.date_field import DateField, DateTimeField
-from .fields.email_field import EmailField
-from .fields.enum_field import EnumField
-from .fields.float_field import FloatField
-from .fields.int_field import IntField
-from .fields.json_field import JsonField
-from .fields.list_field import ListField
-from .fields.object_field import ObjectField
-from .fields.str_field import StrField
-from .fields.uuid_field import UuidField
+from dynafield.base_model import BaseModel
+from dynafield.fields.base_field import build_dynamic_model
+from dynafield.fields.bool_field import BoolField
+from dynafield.fields.date_field import DateField, DateTimeField
+from dynafield.fields.email_field import EmailField
+from dynafield.fields.enum_field import EnumField
+from dynafield.fields.float_field import FloatField
+from dynafield.fields.int_field import IntField
+from dynafield.fields.json_field import JsonField
+from dynafield.fields.list_field import ListField
+from dynafield.fields.object_field import ObjectField
+from dynafield.fields.str_field import StrField
+from dynafield.fields.uuid_field import UuidField
 
 NoneType = type(None)
 

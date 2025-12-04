@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Any, Dict
 
-from ..gql.custom_base_model import GqlBase
+from dynafield.gql.custom_base_model import GqlBase
 
 
 class ErrorMessage(GqlBase):

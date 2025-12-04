@@ -4,8 +4,8 @@ from sqlalchemy import select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql import Select, func
 
-from ..expressions.types import FilterExpression
-from ..logger.logger_config import get_logger
+from dynafield.expressions.types import FilterExpression
+from dynafield.logger.logger_config import get_logger
 
 log = get_logger(__name__)
 

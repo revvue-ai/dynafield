@@ -1,7 +1,7 @@
 import asyncio
 import logging
 
-from .jwks_cache import cached_jwks_client
+from dynafield.clerk.jwks_cache import cached_jwks_client
 
 logger = logging.getLogger(__name__)
 

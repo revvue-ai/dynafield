@@ -5,7 +5,7 @@ from typing import Any, Dict, Optional
 from jwt import PyJWKClient
 from rediskit.redis.a_client import get_async_redis_connection
 
-from .. import config
+from dynafield import config
 
 logger = logging.getLogger(__name__)
 

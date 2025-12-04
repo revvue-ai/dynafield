@@ -7,7 +7,7 @@ from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 from opentelemetry.sdk.resources import SERVICE_NAME, Resource
 from opentelemetry.sdk.trace import TracerProvider
 
-from ..logger.logger_config import get_logger
+from dynafield.logger.logger_config import get_logger
 
 log = get_logger(__name__)
 
