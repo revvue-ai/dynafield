@@ -60,7 +60,7 @@ class ColumnFilter(BaseFilterExpression):
 
     def to_sql(self) -> Tuple[str, List[Any]]:
         """Convert to SQL expression"""
-        from app.utils.expressions.sql_filter_builder import SQLFilterBuilder
+        from dynafield.expressions.sql_filter_builder import SQLFilterBuilder
 
         builder = SQLFilterBuilder()
         result = builder.build_column_filter(self)
@@ -68,7 +68,7 @@ class ColumnFilter(BaseFilterExpression):
 
     def to_polars(self) -> pl.Expr:
         """Convert to Polars expression"""
-        from app.utils.expressions.polars_filter_builder import PolarsFilterBuilder
+        from dynafield.expressions.polars_filter_builder import PolarsFilterBuilder
 
         builder = PolarsFilterBuilder()
         result = builder.build_column_filter(self)
@@ -82,14 +82,14 @@ class LogicalFilter(BaseFilterExpression):
     conditions: List["FilterExpression"]
 
     def to_sql(self) -> Tuple[str, List[Any]]:
-        from app.utils.expressions.sql_filter_builder import SQLFilterBuilder
+        from dynafield.expressions.sql_filter_builder import SQLFilterBuilder
 
         builder = SQLFilterBuilder()
         result = builder.build_logical_filter(self)
         return result
 
     def to_polars(self) -> pl.Expr:
-        from app.utils.expressions.polars_filter_builder import PolarsFilterBuilder
+        from dynafield.expressions.polars_filter_builder import PolarsFilterBuilder
 
         builder = PolarsFilterBuilder()
         result = builder.build_logical_filter(self)
