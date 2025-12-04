@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dynafield"
-version = "0.0.19"
+version = "0.0.20"
 description = "Dynamic fields build up schema"
 readme = "README.md"
 authors = [
@@ -66,6 +66,10 @@ Changelog = "https://github.com/revvue-ai/dynafield/blob/main/CHANGELOG.md"
 
 [tool.setuptools]
 packages = ["dynafield"]
+
+[tool.setuptools.package.find]
+where = ["dynafield"]
+exclude = ["example", "example.*"]
 
 [tool.setuptools.package-data]
 dynafield = ["py.typed"]
