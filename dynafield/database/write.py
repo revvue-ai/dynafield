@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio.session import AsyncSession
 from sqlmodel import SQLModel
 
 from dynafield.logger.logger_config import get_logger
-from dynafield.tracing import get_tracer
+from dynafield.tracing.op import get_tracer
 
 log = get_logger(__name__)
 tracer = get_tracer(__name__)
