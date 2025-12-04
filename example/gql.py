@@ -6,9 +6,8 @@ import strawberry
 from strawberry import Info
 from strawberry.scalars import JSON
 
-from dynafield import TypeFieldsUnion
 from dynafield.base_model import BaseModel
-from dynafield.record_schema import RecordSchemaDefinition, RecordSchemaDefinitionGql
+from dynafield.record_schema import RecordSchemaDefinition, RecordSchemaDefinitionGql, TypeFieldsUnion
 
 db_record_schema: dict[UUID, RecordSchemaDefinition] = {}
 db_records: dict[UUID, list[dict[str, Any]]] = defaultdict(list)

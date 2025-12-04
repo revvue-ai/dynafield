@@ -13,8 +13,8 @@ from pydantic import Field
 from pydantic.fields import FieldInfo
 from pydantic_core import PydanticUndefined
 
-from dynafield import build_dynamic_model
 from dynafield.base_model import BaseModel
+from dynafield.fields.base_field import build_dynamic_model
 from dynafield.fields.bool_field import BoolField, BoolFieldGql
 from dynafield.fields.date_field import (
     DateField,
